@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Login/Signup</title>
+    <style>
+        :root {
+            --primary-color: #6c63ff;
+            --secondary-color: #4c46b6;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+            --text-color: #333;
+            --text-secondary: #666;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --input-bg: #f1f3f5;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+        }
+
+        .dark-mode {
+            --primary-color: #8b85ff;
+            --secondary-color: #6c63ff;
+            --text-color: #e1e1e1;
+            --text-secondary: #b0b0b0;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --input-bg: #2d2d2d;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color var(--transition-speed);
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            height: 600px;
+            display: flex;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px var(--shadow-color);
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-color);
+            font-size: 24px;
+            transition: transform 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+        }
+
+        .form-container {
+            width: 50%;
+            background-color: var(--card-bg);
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all var(--transition-speed);
+        }
+
+        .illustration {
+            width: 50%;
+            background-color: var(--primary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            transition: background-color var(--transition-speed);
+        }
+
+        .illustration svg {
+            width: 80%;
+            height: auto;
+            max-height: 400px;
+            transform: translateY(0);
+            transition: transform 0.5s ease-in-out;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            transition: color var(--transition-speed);
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            font-size: 16px;
+            transition: color var(--transition-speed);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px 20px;
+            border: none;
+            background-color: var(--input-bg);
+            border-radius: 12px;
+            font-size: 16px;
+            color: var(--text-color);
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+
+        .form-group label {
+            position: absolute;
+            left: 20px;
+            top: 16px;
+            color: var(--text-secondary);
+            pointer-events: none;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus ~ label,
+        .form-group input:valid ~ label {
+            top: -10px;
+            left: 15px;
+            font-size: 12px;
+            background-color: var(--card-bg);
+            padding: 0 5px;
+            color: var(--primary-color);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .switcher {
+            margin-top: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .switcher a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 5px;
+            transition: color 0.3s;
+        }
+
+        .switcher a:hover {
+            text-decoration: underline;
+        }
+
+        .tabs {
+            display: none;
+        }
+
+        .message {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            animation: fadeIn 0.5s;
+            display: none;
+        }
+
+        .success {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .error {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+        }
+
+        #login-form, 
+        #signup-form {
+            opacity: 0;
+            display: none;
+            transform: translateX(20px);
+            transition: all 0.5s;
+        }
+
+        #login-form.active,
+        #signup-form.active {
+            opacity: 1;
+            display: block;
+            transform: translateX(0);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .form-container, 
+            .illustration {
+                width: 100%;
+            }
+            
+            .illustration {
+                height: 200px;
+                order: -1;
+            }
+            
+            .form-container {
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="theme-toggle" id="theme-toggle">☀️</button>
+        
+        <div class="form-container">
+            <div id="login-form" class="active">
+                <h1>Welcome back</h1>
+                <p class="subtitle">Please enter your details to sign in</p>
+                
+                <div id="login-message" class="message"></div>
+                
+                <div class="form-group">
+                    <input type="email" id="login-email" required>
+                    <label for="login-email">Email</label>
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" id="login-password" required>
+                    <label for="login-password">Password</label>
+                </div>
+                
+                <button id="login-button">Sign In</button>
+                
+                <div class="switcher">
+                    Don't have an account?<a href="#" id="show-signup">Sign up</a>
+                </div>
+            </div>
+            
+            <div id="signup-form">
+                <h1>Create Account</h1>
+                <p class="subtitle">Please fill in the details below</p>
+                
+                <div id="signup-message" class="message"></div>
+                
+                <div class="form-group">
+                    <input type="text" id="signup-name" required>
+                    <label for="signup-name">Full Name</label>
+                </div>
+                
+                <div class="form-group">
+                    <input type="email" id="signup-email" required>
+                    <label for="signup-email">Email</label>
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" id="signup-password" required>
+                    <label for="signup-password">Password</label>
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" id="signup-confirm" required>
+                    <label for="signup-confirm">Confirm Password</label>
+                </div>
+                
+                <button id="signup-button">Create Account</button>
+                
+                <div class="switcher">
+                    Already have an account?<a href="#" id="show-login">Sign in</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="illustration">
+            <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background elements -->
+                <circle cx="250" cy="250" r="150" fill="#ffffff" opacity="0.1"/>
+                <circle cx="200" cy="150" r="50" fill="#ffffff" opacity="0.1"/>
+                <circle cx="350" cy="350" r="70" fill="#ffffff" opacity="0.1"/>
+                
+                <!-- Device frame -->
+                <rect x="150" y="100" width="200" height="300" rx="15" fill="#f1f3f6" stroke="#d1d9e6" stroke-width="2"/>
+                <rect x="160" y="120" width="180" height="240" rx="3" fill="#ffffff"/>
+                
+                <!-- Home button -->
+                <circle cx="250" cy="380" r="10" fill="#e6e6e6"/>
+                
+                <!-- Login form elements (stylized) -->
+                <rect x="185" y="150" width="130" height="10" rx="5" fill="#6c63ff" opacity="0.7"/>
+                <rect x="185" y="170" width="100" height="6" rx="3" fill="#e6e6e6"/>
+                
+                <rect x="185" y="200" width="130" height="25" rx="5" fill="#f5f5f5" stroke="#e6e6e6" stroke-width="1"/>
+                <rect x="185" y="240" width="130" height="25" rx="5" fill="#f5f5f5" stroke="#e6e6e6" stroke-width="1"/>
+                
+                <rect x="185" y="290" width="130" height="30" rx="5" fill="#6c63ff"/>
+                
+                <!-- User icon -->
+                <circle cx="250" cy="100" r="35" fill="#f1f3f6" stroke="#d1d9e6" stroke-width="2" transform="translate(0, -30)"/>
+                <circle cx="250" cy="85" r="12" fill="#6c63ff" transform="translate(0, -30)"/>
+                <path d="M230,120 Q250,140 270,120" stroke="#6c63ff" stroke-width="5" fill="transparent" transform="translate(0, -30)"/>
+                
+                <!-- Decorative elements -->
+                <circle cx="150" cy="400" r="20" fill="#6c63ff" opacity="0.2"/>
+                <circle cx="350" cy="420" r="15" fill="#6c63ff" opacity="0.2"/>
+                <circle cx="380" cy="150" r="25" fill="#6c63ff" opacity="0.2"/>
+                <circle cx="120" cy="200" r="15" fill="#6c63ff" opacity="0.2"/>
+                
+                <!-- Animated elements -->
+                <g id="floatingElements">
+                    <circle cx="150" cy="120" r="5" fill="#6c63ff" opacity="0.5">
+                        <animate attributeName="cy" values="120;110;120" dur="3s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="350" cy="200" r="7" fill="#6c63ff" opacity="0.5">
+                        <animate attributeName="cy" values="200;190;200" dur="2.5s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="200" cy="350" r="6" fill="#6c63ff" opacity="0.5">
+                        <animate attributeName="cy" values="350;340;350" dur="4s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="300" cy="400" r="4" fill="#6c63ff" opacity="0.5">
+                        <animate attributeName="cy" values="400;390;400" dur="3.5s" repeatCount="indefinite"/>
+                    </circle>
+                </g>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        // In-memory user storage
+        const users = [];
+        let currentUser = null;
+        let isDarkMode = false;
+        
+        // DOM Elements
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const showLogin = document.getElementById('show-login');
+        const showSignup = document.getElementById('show-signup');
+        const themeToggle = document.getElementById('theme-toggle');
+        
+        // Form elements
+        const loginEmail = document.getElementById('login-email');
+        const loginPassword = document.getElementById('login-password');
+        const loginButton = document.getElementById('login-button');
+        const loginMessage = document.getElementById('login-message');
+        
+        const signupName = document.getElementById('signup-name');
+        const signupEmail = document.getElementById('signup-email');
+        const signupPassword = document.getElementById('signup-password');
+        const signupConfirm = document.getElementById('signup-confirm');
+        const signupButton = document.getElementById('signup-button');
+        const signupMessage = document.getElementById('signup-message');
+        
+        // Toggle between login and signup forms
+        showLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.classList.add('active');
+            signupForm.classList.remove('active');
+            clearMessages();
+        });
+        
+        showSignup.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupForm.classList.add('active');
+            loginForm.classList.remove('active');
+            clearMessages();
+        });
+        
+        // Toggle dark mode
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            isDarkMode = !isDarkMode;
+            themeToggle.innerText = isDarkMode ? '🌙' : '☀️';
+        });
+        
+        // Handle signup submission
+        signupButton.addEventListener('click', () => {
+            const name = signupName.value.trim();
+            const email = signupEmail.value.trim();
+            const password = signupPassword.value;
+            const confirm = signupConfirm.value;
+            
+            // Clear previous messages
+            signupMessage.className = 'message';
+            signupMessage.style.display = 'none';
+            
+            // Validate form
+            if (!name || !email || !password || !confirm) {
+                showMessage(signupMessage, 'Please fill in all fields.', 'error');
+                return;
+            }
+            
+            if (password !== confirm) {
+                showMessage(signupMessage, 'Passwords do not match.', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage(signupMessage, 'Password must be at least 6 characters.', 'error');
+                return;
+            }
+            
+            // Check if email already exists
+            if (users.some(user => user.email === email)) {
+                showMessage(signupMessage, 'Email already registered.', 'error');
+                return;
+            }
+            
+            // Add user to "database"
+            users.push({ name, email, password });
+            
+            // Show success message
+            showMessage(signupMessage, 'Account created successfully! You can now login.', 'success');
+            
+            // Clear form
+            signupName.value = '';
+            signupEmail.value = '';
+            signupPassword.value = '';
+            signupConfirm.value = '';
+            
+            // Automatically switch to login after 2 seconds
+            setTimeout(() => {
+                showLogin.click();
+            }, 2000);
+        });
+        
+        // Handle login submission
+        loginButton.addEventListener('click', () => {
+            const email = loginEmail.value.trim();
+            const password = loginPassword.value;
+            
+            // Clear previous messages
+            loginMessage.className = 'message';
+            loginMessage.style.display = 'none';
+            
+            // Validate form
+            if (!email || !password) {
+                showMessage(loginMessage, 'Please fill in all fields.', 'error');
+                return;
+            }
+            
+            // Check credentials
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                showMessage(loginMessage, `Welcome back, ${user.name}!`, 'success');
+                loginEmail.value = '';
+                loginPassword.value = '';
+            } else {
+                showMessage(loginMessage, 'Invalid email or password.', 'error');
+            }
+        });
+        
+        // Helper function to show messages
+        function showMessage(element, message, type) {
+            element.textContent = message;
+            element.className = `message ${type}`;
+            element.style.display = 'block';
+        }
+        
+        // Clear all message elements
+        function clearMessages() {
+            loginMessage.style.display = 'none';
+            signupMessage.style.display = 'none';
+        }
+        
+        // Animation for input fields (simulating floating labels)
+        document.querySelectorAll('.form-group input').forEach(input => {
+            // Check if input already has value on page load
+            if (input.value !== '') {
+                input.parentNode.classList.add('focused');
+            }
+            
+            // Add event listeners
+            input.addEventListener('focus', () => {
+                input.parentNode.classList.add('focused');
+            });
+            
+            input.addEventListener('blur', () => {
+                if (input.value === '') {
+                    input.parentNode.classList.remove('focused');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
