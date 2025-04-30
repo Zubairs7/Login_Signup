@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-light: #f5f7fa;
+      --bg-dark: #121212;
+      --text-light: #121212;
+      --text-dark: #f5f7fa;
+      --card-light: #ffffff;
+      --card-dark: #1e1e1e;
+      --primary: #007bff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    header {
+      background-color: var(--card-light);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    body.dark header {
+      background-color: var(--card-dark);
+      box-shadow: 0 2px 8px rgba(255,255,255,0.05);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .theme-switch {
+      padding: 6px 14px;
+      font-size: 14px;
+      border: 2px solid var(--primary);
+      background: none;
+      color: var(--primary);
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    main {
+      flex: 1;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background-color: var(--card-light);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+
+    body.dark .card {
+      background-color: var(--card-dark);
+      box-shadow: 0 0 30px rgba(255,255,255,0.05);
+    }
+
+    .card h2 {
+      margin-bottom: 15px;
+    }
+
+    .card p {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .logout-btn {
+      background-color: var(--primary);
+      color: #fff;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover {
+      background-color: #0056b3;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+      }
+
+      .card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">My Dashboard</div>
+    <button class="theme-switch" onclick="toggleTheme()">Switch Theme</button>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Welcome, User!</h2>
+      <p>This is your personalized dashboard. Here you can view your activity, manage settings, and more.</p>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </main>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+    }
+
+    function logout() {
+      localStorage.removeItem("token");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
