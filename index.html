@@ -777,7 +777,7 @@
       const password = document.getElementById('password').value;
       const messageElement = document.getElementById('message');
 
-      const endpoint = isLogin ? 'http://localhost:3000/login' : 'http://localhost:3000/signup';
+      const endpoint = isLogin ? 'https://monster-backend.onrender.com/login' : 'https://monster-backend.onrender.com/signup';
 
       try {
         const res = await fetch(endpoint, {
