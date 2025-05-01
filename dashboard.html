@@ -3,154 +3,1018 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>User Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <title>Monster AI Quiz - Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Orbitron&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --bg-light: #f5f7fa;
-      --bg-dark: #121212;
-      --text-light: #121212;
-      --text-dark: #f5f7fa;
-      --card-light: #ffffff;
-      --card-dark: #1e1e1e;
-      --primary: #007bff;
-    }
-
-    * {
+    body {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      transition: all 0.3s ease;
-    }
-
-    body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--bg-light);
-      color: var(--text-light);
-      min-height: 100vh;
+      background-color: #0f172a;
+      color: white;
+      height: 100vh;
       display: flex;
-      flex-direction: column;
-    }
-
-    body.dark {
-      background-color: var(--bg-dark);
-      color: var(--text-dark);
-    }
-
-    header {
-      background-color: var(--card-light);
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      flex-direction: column;
+      animation: fadeIn 1s ease;
+      overflow-x: hidden;
     }
 
-    body.dark header {
-      background-color: var(--card-dark);
-      box-shadow: 0 2px 8px rgba(255,255,255,0.05);
+    .header-container {
+      text-align: center;
+      margin-bottom: 30px;
+      animation: fadeIn 0.8s ease;
     }
 
-    .logo {
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      color: #00f2fe;
+      margin-bottom: 10px;
+      text-align: center;
+      text-shadow: 0 0 10px #00f2fe;
+    }
+
+    .welcome-text {
+      color: #00f2fe;
       font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--primary);
+      margin: 10px 0 5px 0;
+      text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+      opacity: 0;
+      animation: fadeIn 0.8s ease forwards;
     }
 
-    .theme-switch {
-      padding: 6px 14px;
-      font-size: 14px;
-      border: 2px solid var(--primary);
-      background: none;
-      color: var(--primary);
-      border-radius: 20px;
+    .user-email {
+      color: #ffffff;
+      font-size: 1.1rem;
+      opacity: 0;
+      margin-bottom: 10px;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    .start-quiz-btn {
+      display: none;
+      background: linear-gradient(135deg, #00f2fe 0%, #00c6d2 100%);
+      color: #051937;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 25px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
+    }
+
+    .start-quiz-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+    }
+
+    .profile-pic-container {
+      position: relative;
+      margin-bottom: 15px;
+    }
+
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid #00f2fe;
+      object-fit: cover;
+      box-shadow: 0 0 15px #00f2fe;
+      transition: transform 0.3s ease;
+    }
+
+    .profile-pic:hover {
+      transform: scale(1.05);
+    }
+
+    .upload-icon {
+      position: absolute;
+      bottom: 0;
+      right: 5px;
+      background-color: #00f2fe;
+      color: #051937;
+      padding: 5px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.9rem;
+      box-shadow: 0 0 5px #00f2fe;
+    }
+
+    #profileImageInput {
+      display: none;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 20px;
+      justify-content: center;
+    }
+
+    .btn {
+      background-color: #00f2fe;
+      border: none;
+      color: #051937;
+      font-weight: bold;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+      box-shadow: 0 0 8px #00f2fe;
+    }
+
+    .btn:hover {
+      background-color: #00c6d2;
+      box-shadow: 0 0 12px #00f2fe;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.6);
+    }
+
+    .modal-content {
+      background-color: #0f172a;
+      margin: 8% auto;
+      padding: 20px;
+      border: 2px solid #00f2fe;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 12px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .modal-content input {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 1px solid #00f2fe;
+      border-radius: 8px;
+      background: #051937;
+      color: white;
+      outline: none;
+    }
+
+    .close-btn, .save-btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      margin: 5px;
+      border: none;
       cursor: pointer;
       font-weight: bold;
     }
 
-    main {
-      flex: 1;
-      padding: 40px 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    .close-btn {
+      background-color: red;
+      color: white;
     }
 
-    .card {
-      background-color: var(--card-light);
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.1);
-      max-width: 500px;
-      width: 100%;
+    .save-btn {
+      background-color: #00f2fe;
+      color: #051937;
+      box-shadow: 0 0 8px #00f2fe;
+    }
+
+    .skills-container {
+      margin-top: 15px;
       text-align: center;
     }
 
-    body.dark .card {
-      background-color: var(--card-dark);
-      box-shadow: 0 0 30px rgba(255,255,255,0.05);
+    .skill-badge {
+      display: inline-block;
+      background-color: #051937;
+      color: #00f2fe;
+      border: 1px solid #00f2fe;
+      border-radius: 20px;
+      padding: 6px 14px;
+      margin: 5px;
+      font-size: 0.9rem;
+      box-shadow: 0 0 8px #00f2fe80;
+      animation: fadeIn 0.6s ease forwards;
     }
 
-    .card h2 {
-      margin-bottom: 15px;
+    .level-bar-container {
+      margin-top: 15px;
+      width: 80%;
+      max-width: 300px;
+      background: #1e293b;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 8px #00f2fe60;
     }
 
-    .card p {
-      font-size: 16px;
-      line-height: 1.6;
+    .level-bar {
+      height: 20px;
+      width: 0;
+      background: linear-gradient(90deg, #00f2fe, #00c6d2);
+      transition: width 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* New Modal Styles for collecting quiz details */
+    .quiz-details-modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .quiz-details-content {
+      background-color: #0f172a;
+      margin: 8% auto;
+      padding: 30px;
+      border: 2px solid #00f2fe;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 12px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .quiz-details-content h2 {
+      color: #00f2fe;
+      text-align: center;
       margin-bottom: 20px;
     }
 
-    .logout-btn {
-      background-color: var(--primary);
-      color: #fff;
-      padding: 12px 24px;
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #00f2fe;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #00f2fe;
+      border-radius: 8px;
+      background: #051937;
+      color: white;
+      outline: none;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      box-shadow: 0 0 8px #00f2fe;
+    }
+
+    .form-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    .form-buttons button {
+      padding: 12px 30px;
       border: none;
-      border-radius: 6px;
-      font-weight: 600;
+      border-radius: 8px;
       cursor: pointer;
+      font-weight: bold;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.3s ease;
     }
 
-    .logout-btn:hover {
-      background-color: #0056b3;
+    .save-details-btn {
+      background-color: #00f2fe;
+      color: #051937;
     }
 
-    @media (max-width: 600px) {
-      header {
-        flex-direction: column;
-        gap: 10px;
-        align-items: flex-start;
-      }
-
-      .card {
-        padding: 20px;
-      }
+    .cancel-details-btn {
+      background-color: #dc2626;
+      color: white;
     }
+
+    .form-buttons button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .saved-details {
+      display: none;
+      text-align: center;
+      margin: 20px auto;
+      padding: 20px;
+      max-width: 600px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .welcome-message {
+      color: #00f2fe;
+      font-size: 2rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+      animation: fadeIn 0.8s ease;
+    }
+
+    .user-email {
+      color: #ffffff;
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-bottom: 30px;
+      animation: fadeIn 1s ease;
+    }
+
+    .start-quiz-btn {
+      display: none;
+      background: linear-gradient(135deg, #00f2fe 0%, #00c6d2 100%);
+      color: #051937;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 25px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
+    }
+
+    .start-quiz-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #00f2fe;
+      color: #051937;
+      padding: 15px 25px;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0, 242, 254, 0.3);
+      animation: slideIn 0.5s ease, fadeOut 0.5s ease 2.5s;
+      z-index: 1000;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+    .logout-confirm-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .logout-confirm-content {
+      background-color: #0f172a;
+      margin: 15% auto;
+      padding: 20px;
+      border: 2px solid #00f2fe;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 12px;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .logout-confirm-content h2 {
+      color: #00f2fe;
+      margin-bottom: 20px;
+    }
+
+    .logout-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .logout-buttons button {
+      padding: 10px 25px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .confirm-logout {
+      background-color: #dc2626;
+      color: white;
+    }
+
+    .cancel-logout {
+      background-color: #00f2fe;
+      color: #051937;
+    }
+
+    .logout-buttons button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Add these styles for the animated background */
+    .background-animations {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .svg-shape {
+      position: absolute;
+      opacity: 0.1;
+    }
+
+    .circle-1 {
+      top: 10%;
+      left: 10%;
+      animation: float 8s ease-in-out infinite, rotate 15s linear infinite;
+    }
+
+    .circle-2 {
+      bottom: 20%;
+      right: 15%;
+      animation: float 10s ease-in-out infinite reverse, rotate 20s linear infinite reverse;
+    }
+
+    .square {
+      top: 50%;
+      left: 50%;
+      animation: float 12s ease-in-out infinite, rotate 18s linear infinite;
+    }
+
+    .triangle {
+      bottom: 15%;
+      left: 25%;
+      animation: float 9s ease-in-out infinite reverse, rotate 25s linear infinite;
+    }
+
+    .hex {
+      top: 30%;
+      right: 20%;
+      animation: float 11s ease-in-out infinite, rotate 22s linear infinite reverse;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(20px, -20px); }
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Add glow effect to existing elements */
+    .btn, .start-quiz-btn {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after, .start-quiz-btn::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0,242,254,0.1) 0%, rgba(0,242,254,0) 70%);
+      animation: glowPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 0.8; }
+    }
+
+    /* Enhance existing animations */
+    .welcome-text {
+      animation: fadeIn 0.8s ease forwards, glow 2s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% { text-shadow: 0 0 10px rgba(0, 242, 254, 0.5); }
+      50% { text-shadow: 0 0 20px rgba(0, 242, 254, 0.8); }
+    }
+
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">My Dashboard</div>
-    <button class="theme-switch" onclick="toggleTheme()">Switch Theme</button>
-  </header>
+  <!-- Add the background animations container -->
+  <div class="background-animations">
+    <!-- Circle 1 -->
+    <svg class="svg-shape circle-1" width="100" height="100" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="40" stroke="#00f2fe" stroke-width="2" fill="none"/>
+    </svg>
+    
+    <!-- Circle 2 -->
+    <svg class="svg-shape circle-2" width="150" height="150" viewBox="0 0 150 150">
+      <circle cx="75" cy="75" r="60" stroke="#00f2fe" stroke-width="2" fill="none"/>
+    </svg>
+    
+    <!-- Square -->
+    <svg class="svg-shape square" width="80" height="80" viewBox="0 0 80 80">
+      <rect x="10" y="10" width="60" height="60" stroke="#00f2fe" stroke-width="2" fill="none"/>
+    </svg>
+    
+    <!-- Triangle -->
+    <svg class="svg-shape triangle" width="100" height="100" viewBox="0 0 100 100">
+      <polygon points="50,10 90,90 10,90" stroke="#00f2fe" stroke-width="2" fill="none"/>
+    </svg>
+    
+    <!-- Hexagon -->
+    <svg class="svg-shape hex" width="120" height="120" viewBox="0 0 120 120">
+      <polygon points="60,10 110,40 110,80 60,110 10,80 10,40" stroke="#00f2fe" stroke-width="2" fill="none"/>
+    </svg>
+  </div>
 
-  <main>
-    <div class="card">
-      <h2>Welcome, User!</h2>
-      <p>This is your personalized dashboard. Here you can view your activity, manage settings, and more.</p>
-      <button class="logout-btn" onclick="logout()">Logout</button>
+  <!-- Add particle effect -->
+  <div id="particles-js"></div>
+
+  <!-- Add particles.js library -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    // Initialize particles.js
+    document.addEventListener('DOMContentLoaded', function() {
+      if(typeof particlesJS !== 'undefined') {
+        particlesJS("particles-js", {
+          particles: {
+            number: { value: 50, density: { enable: true, value_area: 800 } },
+            color: { value: "#00f2fe" },
+            shape: { type: "circle" },
+            opacity: {
+              value: 0.5,
+              random: true,
+              animation: { enable: true, speed: 1, minimumValue: 0.1, sync: false }
+            },
+            size: {
+              value: 3,
+              random: true,
+              animation: { enable: true, speed: 2, minimumValue: 0.1, sync: false }
+            },
+            line_linked: {
+              enable: true,
+              distance: 150,
+              color: "#00f2fe",
+              opacity: 0.2,
+              width: 1
+            },
+            move: {
+              enable: true,
+              speed: 1,
+              direction: "none",
+              random: true,
+              straight: false,
+              outMode: "bounce",
+              bounce: false
+            }
+          },
+          interactivity: {
+            detectOn: "canvas",
+            events: {
+              onHover: { enable: true, mode: "grab" },
+              onClick: { enable: true, mode: "push" },
+              resize: true
+            },
+            modes: {
+              grab: { distance: 140, lineLinked: { opacity: 1 } },
+              push: { particles_nb: 4 }
+            }
+          },
+          retina_detect: true
+        });
+      }
+    });
+  </script>
+
+  <!-- Add this style for particles container -->
+  <style>
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      pointer-events: none;
+    }
+  </style>
+
+  <div class="header-container">
+    <h1>Monster AI Quiz</h1>
+    <div id="welcomeMessage" style="display: none;">
+      <div class="welcome-text">Welcome, <span id="userName"></span>!</div>
+      <div class="user-email" id="userEmail"></div>
     </div>
-  </main>
+  </div>
+
+  <div class="profile-pic-container">
+    <img id="profileImage" class="profile-pic" src="https://i.ibb.co/tqg9zrh/default-avatar.png" alt="Profile Picture">
+    <label for="profileImageInput" class="upload-icon"><i class="fas fa-camera"></i></label>
+    <input type="file" id="profileImageInput" accept="image/*">
+  </div>
+
+  <!-- Skill Badges -->
+  <div class="skills-container" id="skillsContainer"></div>
+
+  <!-- Level Bar -->
+  <div class="level-bar-container">
+    <div class="level-bar" id="levelBar"></div>
+  </div>
+
+  <div class="buttons">
+    <button id="initialStartBtn" class="btn" onclick="showQuizDetails(false)">Start Quiz</button>
+    <button id="startQuizBtn" class="start-quiz-btn" onclick="beginQuiz()" style="display: none;">Begin Quiz</button>
+    <button class="btn" onclick="editProfile()">Edit Profile</button>
+    <button class="btn" onclick="showLogoutConfirm()">Logout</button>
+  </div>
+
+  <!-- Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <h2>Edit Profile</h2>
+      <input type="text" id="newUsername" placeholder="New Username">
+      <input type="email" id="newEmail" placeholder="New Email">
+      <input type="text" id="newSkills" placeholder="Skills (comma separated)">
+      <input type="text" id="newAge" placeholder="Age">
+      <input type="text" id="newGoals" placeholder="Your Career Goals">
+      <button class="save-btn" onclick="saveProfile()">Save</button>
+      <button class="close-btn" onclick="closeEditModal()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Quiz Details Modal -->
+  <div id="quizDetailsModal" class="quiz-details-modal">
+    <div class="quiz-details-content">
+      <h2>Enter Your Details</h2>
+      <form id="quizDetailsForm">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" required placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required placeholder="Enter your email">
+        </div>
+        <div class="form-group">
+          <label for="age">Age</label>
+          <input type="number" id="age" required min="1" max="100" placeholder="Enter your age">
+        </div>
+        <div class="form-group">
+          <label for="education">Education Level</label>
+          <select id="education" required>
+            <option value="">Select education level</option>
+            <option value="high_school">High School</option>
+            <option value="bachelors">Bachelor's Degree</option>
+            <option value="masters">Master's Degree</option>
+            <option value="phd">Ph.D.</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-buttons">
+          <button type="button" class="cancel-details-btn" onclick="closeQuizDetails()">Cancel</button>
+          <button type="submit" class="save-details-btn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="savedDetails" class="saved-details">
+    <!-- Welcome message will be displayed here -->
+  </div>
+
+  <!-- Add logout confirmation modal -->
+  <div id="logoutConfirmModal" class="logout-confirm-modal">
+    <div class="logout-confirm-content">
+      <h2>Confirm Logout</h2>
+      <p>Are you sure you want to logout?</p>
+      <div class="logout-buttons">
+        <button class="cancel-logout" onclick="closeLogoutConfirm()">Cancel</button>
+        <button class="confirm-logout" onclick="confirmLogout()">Logout</button>
+      </div>
+    </div>
+  </div>
 
   <script>
-    function toggleTheme() {
-      document.body.classList.toggle('dark');
+ 
+  const usernameElement = document.getElementById('username');
+  const emailElement = document.getElementById('email');
+  const profileImage = document.getElementById('profileImage');
+  const profileImageInput = document.getElementById('profileImageInput');
+  const skillsContainer = document.getElementById('skillsContainer');
+  const levelBar = document.getElementById('levelBar');
+
+  const editModal = document.getElementById('editModal');
+  const quizDetailsModal = document.getElementById('quizDetailsModal');
+
+  // Load saved user profile from localStorage
+  function loadUserProfile() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      usernameElement.textContent = user.username || 'User';
+      emailElement.textContent = user.email || 'user@example.com';
+      profileImage.src = user.image || profileImage.src;
+      showSkills(user.skills || []);
+      updateLevelBar(user.skills?.length || 0);
+    }
+  }
+
+  // Show skill badges
+  function showSkills(skills = []) {
+    skillsContainer.innerHTML = '';
+    skills.forEach(skill => {
+      const badge = document.createElement('span');
+      badge.className = 'skill-badge';
+      badge.textContent = skill;
+      skillsContainer.appendChild(badge);
+    });
+  }
+
+  // Animate level bar based on skill count
+  function updateLevelBar(skillCount) {
+    const width = Math.min(skillCount * 20, 100); // Max width: 100%
+    levelBar.style.width = width + '%';
+  }
+
+  // Handle profile image upload
+  profileImageInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        profileImage.src = e.target.result;
+        const user = JSON.parse(localStorage.getItem('user')) || {};
+        user.image = e.target.result;
+        localStorage.setItem('user', JSON.stringify(user));
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Open & close modals
+  function openEditModal() {
+    editModal.style.display = 'block';
+  }
+
+  function closeEditModal() {
+    editModal.style.display = 'none';
+  }
+
+  function closeQuizDetails() {
+    quizDetailsModal.style.display = 'none';
+  }
+
+  // Save profile changes
+  function saveProfile() {
+    const username = document.getElementById('newUsername').value;
+    const email = document.getElementById('newEmail').value;
+    const skillsInput = document.getElementById('newSkills').value;
+
+    const skills = skillsInput.split(',').map(s => s.trim()).filter(Boolean);
+
+    const user = {
+      username,
+      email,
+      skills,
+      image: profileImage.src,
+    };
+
+    localStorage.setItem('user', JSON.stringify(user));
+    loadUserProfile();
+    closeEditModal();
+  }
+
+  // Store quiz details
+  let quizUserDetails = null;
+
+  function showQuizDetails(isEdit = false) {
+    const modal = document.getElementById('quizDetailsModal');
+    const modalTitle = modal.querySelector('h2');
+    const submitBtn = modal.querySelector('.save-details-btn');
+    
+    // Change title and button text if editing
+    modalTitle.textContent = isEdit ? 'Edit Your Details' : 'Enter Your Details';
+    submitBtn.textContent = isEdit ? 'Update' : 'Save';
+
+    // If editing, populate form with existing details
+    if (isEdit && quizUserDetails) {
+      document.getElementById('fullName').value = quizUserDetails.fullName;
+      document.getElementById('email').value = quizUserDetails.email;
+      document.getElementById('age').value = quizUserDetails.age;
+      document.getElementById('education').value = quizUserDetails.education;
+    } else {
+      // Clear form if not editing
+      document.getElementById('quizDetailsForm').reset();
     }
 
-    function logout() {
-      localStorage.removeItem("token");
-      window.location.href = "index.html";
+    modal.style.display = 'block';
+  }
+
+  function displaySavedDetails(details) {
+    const welcomeMessage = document.getElementById('welcomeMessage');
+    const userName = document.getElementById('userName');
+    const userEmail = document.getElementById('userEmail');
+    const initialStartBtn = document.getElementById('initialStartBtn');
+    const startQuizBtn = document.getElementById('startQuizBtn');
+
+    // Update welcome message
+    welcomeMessage.style.display = 'block';
+    userName.textContent = details.fullName;
+    userEmail.textContent = details.email;
+
+    // Show/hide appropriate buttons
+    if (!initialStartBtn.classList.contains('hidden')) {
+      initialStartBtn.style.display = 'none';
+      startQuizBtn.style.display = 'inline-block';
     }
-  </script>
+  }
+
+  function beginQuiz() {
+    // Show loading notification
+    showNotification('Loading quiz...');
+    
+    // Store current page state
+    localStorage.setItem('quizStarted', 'true');
+    
+    // Redirect to quiz page
+    setTimeout(() => {
+      window.location.href = 'https://zubairs7.github.io/Login_Signup/';
+    }, 1000);
+  }
+
+  // Add this function to check if quiz is already started
+  function checkQuizState() {
+    const quizStarted = localStorage.getItem('quizStarted');
+    const userDetails = localStorage.getItem('quizUserDetails');
+    
+    // If quiz is started and user details exist, show appropriate buttons
+    if (quizStarted && userDetails) {
+      const initialStartBtn = document.getElementById('initialStartBtn');
+      const startQuizBtn = document.getElementById('startQuizBtn');
+      if (initialStartBtn && startQuizBtn) {
+        initialStartBtn.style.display = 'none';
+        startQuizBtn.style.display = 'inline-block';
+      }
+    }
+  }
+
+  // Call checkQuizState on page load
+  window.addEventListener('DOMContentLoaded', function() {
+    checkQuizState();
+    const savedDetails = localStorage.getItem('quizUserDetails');
+    if (savedDetails) {
+      const details = JSON.parse(savedDetails);
+      quizUserDetails = details;
+      displaySavedDetails(details);
+    }
+  });
+
+  // Handle form submission
+  document.getElementById('quizDetailsForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Get form values
+    const details = {
+      fullName: document.getElementById('fullName').value,
+      email: document.getElementById('email').value,
+      age: document.getElementById('age').value,
+      education: document.getElementById('education').value
+    };
+
+    // Store the details
+    quizUserDetails = details;
+    
+    // Display the welcome message
+    displaySavedDetails(details);
+    
+    // Close the modal
+    closeQuizDetails();
+    
+    // Store in localStorage for persistence
+    localStorage.setItem('quizUserDetails', JSON.stringify(details));
+
+    // Show success message
+    const isEditing = document.querySelector('.save-details-btn').textContent === 'Update';
+    const message = isEditing ? 'Profile updated successfully!' : 'Details saved successfully!';
+    showNotification(message);
+  });
+
+  // Close modal if clicking outside
+  window.onclick = function(event) {
+    const modal = document.getElementById('quizDetailsModal');
+    if (event.target === modal) {
+      closeQuizDetails();
+    }
+  }
+
+  // Logout function
+  function logout() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('quizDetails');
+    location.reload();
+  }
+
+  // Add notification system
+  function showNotification(message) {
+    // Remove existing notification if any
+    const existingNotification = document.querySelector('.notification');
+    if (existingNotification) {
+      existingNotification.remove();
+    }
+
+    // Create and show new notification
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
+  }
+
+  // Add edit profile button click handler
+  function editProfile() {
+    showQuizDetails(true);
+  }
+
+  // Add these functions for logout handling
+  function showLogoutConfirm() {
+    document.getElementById('logoutConfirmModal').style.display = 'block';
+  }
+
+  function closeLogoutConfirm() {
+    document.getElementById('logoutConfirmModal').style.display = 'none';
+  }
+
+  function confirmLogout() {
+    // Clear stored user data
+    localStorage.removeItem('quizUserDetails');
+    
+    // Show logout notification
+    showNotification('Logging out...');
+    
+    // Redirect to login page after a brief delay
+    setTimeout(() => {
+      window.location.href = 'https://zubairs7.github.io/Login_Signup/';
+    }, 1000);
+  }
+
+  // Close logout modal if clicking outside
+  window.onclick = function(event) {
+    const modal = document.getElementById('logoutConfirmModal');
+    if (event.target === modal) {
+      closeLogoutConfirm();
+    }
+  }
+
+  // Initialize page with stored data
+  loadUserProfile();
+</script>
 </body>
 </html>
